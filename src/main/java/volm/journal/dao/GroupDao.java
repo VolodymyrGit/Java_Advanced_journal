@@ -1,5 +1,5 @@
 package volm.journal.dao;
 
-import volm.journal.model.Group;
+import volm.journal.model.Sgroup;
 
-public interface GroupDao extends CrudDao <Group, Long> {}
+public interface GroupDao extends CrudDao <Sgroup, Long> {}
