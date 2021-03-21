@@ -11,7 +11,7 @@ public class HomeWork {
 
     private boolean done;
 
-    private String hv_description;
+    private String hw_description;
 
 
     public HomeWork(Long id, Long lessonId, Long studentId, boolean done, String hvDescription) {
@@ -19,7 +19,7 @@ public class HomeWork {
         this.lesson_id = lessonId;
         this.student_id = studentId;
         this.done = done;
-        this.hv_description = hvDescription;
+        this.hw_description = hvDescription;
     }
 
     public Long getId() {
@@ -54,11 +54,11 @@ public class HomeWork {
         this.done = done;
     }
 
-    public String getHv_description() {
-        return hv_description;
+    public String getHw_description() {
+        return hw_description;
     }
 
-    public void setHv_description(String hv_description) {
-        this.hv_description = hv_description;
+    public void setHw_description(String hv_description) {
+        this.hw_description = hv_description;
     }
 }

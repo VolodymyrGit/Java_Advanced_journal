@@ -47,7 +47,7 @@ public class TableServlet extends HttpServlet {
         final Map<Long, List<HomeWork>> homeworks = lessonsIds.stream()
                 .map(id -> homeWorkDao1.findByLessonsIds(id))
                 .flatMap(List::stream)
-                .collect(Collectors.groupingBy(hv -> hv.getStudent_id(), Collectors.toList()));
+                .collect(Collectors.groupingBy(hw -> hw.getStudent_id(), Collectors.toList()));
 
 
         req.setAttribute("teachers", teachers);
