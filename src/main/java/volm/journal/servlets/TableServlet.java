@@ -30,13 +30,13 @@ public class TableServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        long group_id = Long.parseLong(req.getParameter("group_id"));
+        Long group_id = Long.parseLong(req.getParameter("group_id"));
 
         List<Usr> users = userService.findByGroupId(group_id);
 
-        List<Usr> teachers = filterByRole(users, Role.TEACHER);
+        List<Usr> teachers = userService.findUsersByRole(group_id, Role.TEACHER);
 
-        List<Usr> students = filterByRole(users, Role.STUDENT);
+        List<Usr> students = userService.findUsersByRole(group_id, Role.STUDENT);
 
         List<Lesson> lessons = lessonDao1.findByGroupId(group_id);
 
@@ -44,7 +44,7 @@ public class TableServlet extends HttpServlet {
                 .map(l -> l.getId())
                 .collect(Collectors.toList());
 
-        final Map<Long, List<HomeWork>> homeworks = lessonsIds.stream()
+        Map<Long, List<HomeWork>> homeworks = lessonsIds.stream()
                 .map(id -> homeWorkDao1.findByLessonsIds(id))
                 .flatMap(List::stream)
                 .collect(Collectors.groupingBy(hw -> hw.getStudent_id(), Collectors.toList()));
@@ -54,13 +54,8 @@ public class TableServlet extends HttpServlet {
         req.setAttribute("students", students);
         req.setAttribute("lessons", lessons);
         req.setAttribute("homeworks", homeworks);
+        req.setAttribute("group_id", group_id);
 
         req.getRequestDispatcher("table.jsp").forward(req, resp);
-    }
-
-    private List<Usr> filterByRole(List<Usr> users, Role role) {
-        return users.stream()
-                .filter(u -> u.getRole().equals(role))
-                .collect(Collectors.toList());
     }
 }

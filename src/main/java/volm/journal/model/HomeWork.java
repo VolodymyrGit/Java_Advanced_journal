@@ -14,12 +14,17 @@ public class HomeWork {
     private String hw_description;
 
 
-    public HomeWork(Long id, Long lessonId, Long studentId, boolean done, String hvDescription) {
+    public HomeWork(Long lesson_id, Long student_id) {
+        this.lesson_id = lesson_id;
+        this.student_id = student_id;
+    }
+
+    public HomeWork(Long id, Long lesson_id, Long student_id, boolean done, String hw_description) {
         this.id = id;
-        this.lesson_id = lessonId;
-        this.student_id = studentId;
+        this.lesson_id = lesson_id;
+        this.student_id = student_id;
         this.done = done;
-        this.hw_description = hvDescription;
+        this.hw_description = hw_description;
     }
 
     public Long getId() {
@@ -58,7 +63,7 @@ public class HomeWork {
         return hw_description;
     }
 
-    public void setHw_description(String hv_description) {
-        this.hw_description = hv_description;
+    public void setHw_description(String hw_description) {
+        this.hw_description = hw_description;
     }
 }

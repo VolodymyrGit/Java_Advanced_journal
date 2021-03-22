@@ -19,24 +19,38 @@
     </c:forEach>
 
     <table class="table table-bordered border-primary">
+
         <tr>
             <td> # </td>
+
             <c:forEach items="${lessons}" var="l">
                 <td>${l.id}<br>${l.create_date}</td>
             </c:forEach>
+
+            <td><a href="/add_lesson?group_id=${group_id}">Add<br>Lesson</a></td>
         </tr>
+
         <tr>
             <c:forEach items="${students}" var="st">
                 <tr>
                     <td>${st.u_name}</td>
+
                     <c:forEach items="${homeworks.get(st.id)}" var="hw">
+
                         <c:if test="${!hw.hw_description.isEmpty()}">
-                        <td><a href="/hw?hwId=${hw.id}&desc=${hw.hw_description}">${hw.hw_description}</a></td>
+
+                            <td <c:if test="${hw.done}"> style="background-color: green" </c:if>
+
+                                <c:if test="${!hw.done}"> style="background-color: yellow" </c:if>
+                            >
+                                <a href="/hw?hwId=${hw.id}">${hw.hw_description}</a>
+                            </td>
                         </c:if>
 
                         <c:if test="${hw.hw_description.isEmpty()}">
                             <td><a href="/hw?hwId=${hw.id}">add</a></td>
                         </c:if>
+
                     </c:forEach>
                 </tr>
             </c:forEach>

@@ -17,6 +17,11 @@ public class Lesson {
         this.create_date = create_date;
     }
 
+    public Lesson(Long group_id, Date create_date) {
+        this.group_id = group_id;
+        this.create_date = create_date;
+    }
+
     public long getId() {
         return id;
     }

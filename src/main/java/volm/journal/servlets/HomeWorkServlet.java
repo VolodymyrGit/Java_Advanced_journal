@@ -23,8 +23,8 @@ public class HomeWorkServlet extends HttpServlet {
         String hwId = req.getParameter("hwId");
         req.setAttribute("hwId", hwId);
 
-        String description = req.getParameter("desc");
-        req.setAttribute("description", description);
+        HomeWork hwById = homeWorkDao1.findById(Long.parseLong(hwId));
+        req.setAttribute("description", hwById.getHw_description());
 
         req.getRequestDispatcher("hwForm.jsp").forward(req, resp);
     }
@@ -34,11 +34,11 @@ public class HomeWorkServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String description = req.getParameter("description");
-        long hwId = Long.parseLong(req.getParameter("hwId"));
+        Long hwId = Long.parseLong(req.getParameter("hwId"));
 
         HomeWork homeWork = homeWorkDao1.findById(hwId);
         homeWork.setHw_description(description);
-        homeWorkDao1.save(homeWork);
+        homeWorkDao1.updateHomeWorkDescription(homeWork);
 
         resp.sendRedirect("/table?group_id=1");
     }

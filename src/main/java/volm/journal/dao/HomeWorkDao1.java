@@ -68,15 +68,33 @@ public class HomeWorkDao1 {
         return null;
     }
 
+    public void updateHomeWorkDescription(HomeWork hw) {
+
+        String sqlUpdateHomeWorkDescriptionQuery = "UPDATE homework SET hw_description = ? WHERE id = ?";
+
+        try (Connection connection = DBConfiguration.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlUpdateHomeWorkDescriptionQuery);
+
+            preparedStatement.setString(1, hw.getHw_description());
+            preparedStatement.setLong(2, hw.getId());
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void save(HomeWork hw) {
 
-        String sqlSaveQuery = "UPDATE homework SET hw_description = ? WHERE id = ?";
+        String sqlSaveQuery = "INSERT INTO homework (lesson_id, student_id) VALUES (?, ?)";
 
         try (Connection connection = DBConfiguration.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(sqlSaveQuery);
 
-            preparedStatement.setString(1, hw.getHw_description());
-            preparedStatement.setLong(2, hw.getId());
+            preparedStatement.setLong(1, hw.getLesson_id());
+            preparedStatement.setLong(2, hw.getStudent_id());
 
             preparedStatement.executeUpdate();
 
