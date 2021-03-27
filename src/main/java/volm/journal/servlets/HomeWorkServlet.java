@@ -40,6 +40,6 @@ public class HomeWorkServlet extends HttpServlet {
         homeWork.setHw_description(description);
         homeWorkDao1.updateHomeWorkDescription(homeWork);
 
-        resp.sendRedirect("/table?group_id=1");
+        resp.sendRedirect("/table");
     }
 }

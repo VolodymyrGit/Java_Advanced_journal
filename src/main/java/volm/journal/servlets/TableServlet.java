@@ -30,7 +30,8 @@ public class TableServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Long group_id = Long.parseLong(req.getParameter("group_id"));
+        Usr currentUsr = (Usr) req.getSession().getAttribute("currentUsr");
+        Long group_id = currentUsr.getGroup_id();
 
         List<Usr> users = userService.findByGroupId(group_id);
 

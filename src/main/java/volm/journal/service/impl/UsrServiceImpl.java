@@ -6,11 +6,14 @@ import volm.journal.model.Usr;
 import volm.journal.service.UsrService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+
 
 public class UsrServiceImpl implements UsrService {
 
     private final UsrDao usrDao = new UsrDao();
+
 
     @Override
     public List<Usr> findByGroupId(long group_id) {
@@ -24,5 +27,24 @@ public class UsrServiceImpl implements UsrService {
         return users.stream()
                 .filter(u -> u.getRole().equals(role))
                 .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public Usr save(Usr user) {
+        usrDao.save(user);
+        return findUsrByEmail(user.getEmail());
+    }
+
+
+    @Override
+    public Usr findUsrByEmail(String email) {
+        return usrDao.findByEmail(email)
+                .orElseThrow(NoSuchElementException::new);
+    }
+
+    @Override
+    public boolean authorized(String email, String password) {
+        return usrDao.checkExist(email, password);
     }
 }

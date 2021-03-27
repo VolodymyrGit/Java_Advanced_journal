@@ -43,6 +43,6 @@ public class AddLessonServlet extends HttpServlet {
                 .map(s -> new HomeWork(savedLesson.getId(), s.getId()))
                 .forEach(hw -> homeWorkDao1.save(hw));
 
-        resp.sendRedirect("/table?group_id=1");
+        resp.sendRedirect("/table");
     }
 }
