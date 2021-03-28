@@ -8,13 +8,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Cabinet ${sessionScope.currentUsr.u_name}</title>
+    <title>${sessionScope.currentUsr.u_name} Cabinet</title>
 </head>
 <body>
 <h1>${sessionScope.currentUsr.u_name}</h1>
-<h1>${sessionScope.currentUsr.email}</h1>
-<h1>${sessionScope.currentUsr.phone_number}</h1>
-<h1>${sessionScope.currentUsr.group_id}</h1>
+<h1>Email - ${sessionScope.currentUsr.email}</h1>
+<h1>Phone Number - ${sessionScope.currentUsr.phone_number}</h1>
+<h1>Group Id - ${sessionScope.currentUsr.group_id}</h1>
 <h1>${sessionScope.currentUsr.role}</h1>
 
 </body>

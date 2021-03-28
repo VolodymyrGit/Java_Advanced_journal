@@ -2,6 +2,7 @@ package volm.journal.servlets;
 
 import volm.journal.dao.HomeWorkDao1;
 import volm.journal.model.HomeWork;
+import volm.journal.model.Usr;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,9 +24,11 @@ public class HomeWorkServlet extends HttpServlet {
         String hwId = req.getParameter("hwId");
         req.setAttribute("hwId", hwId);
 
+//        Usr currentUsr = (Usr) req.getSession().getAttribute("currentUsr");
+//        long usrId = currentUsr.getId();
+
         HomeWork hwById = homeWorkDao1.findById(Long.parseLong(hwId));
         req.setAttribute("description", hwById.getHw_description());
-
         req.getRequestDispatcher("hwForm.jsp").forward(req, resp);
     }
 
