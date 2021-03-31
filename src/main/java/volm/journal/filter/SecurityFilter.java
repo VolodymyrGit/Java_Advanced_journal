@@ -1,7 +1,7 @@
 package volm.journal.filter;
 
 
-import volm.journal.model.Usr;
+import volm.journal.model.User;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -24,9 +24,9 @@ public class SecurityFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) req;
-        Usr currentUsr = (Usr) httpRequest.getSession().getAttribute("currentUsr");
+        User currentUser = (User) httpRequest.getSession().getAttribute("currentUser");
 
-        if(currentUsr == null) {
+        if(currentUser == null) {
 
             String errorMessage = "You must login to get access to this page";
             req.setAttribute("errorMessage", errorMessage);

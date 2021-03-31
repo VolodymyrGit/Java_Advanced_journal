@@ -2,7 +2,7 @@ package volm.journal.dao;
 
 import volm.journal.config.DBConfiguration;
 import volm.journal.enums.Role;
-import volm.journal.model.Usr;
+import volm.journal.model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UsrDao {
+public class UserDao {
 
 
-    public List<Usr> findByGroupId(Long group_id) {
+    public List<User> findByGroupId(Long group_id) {
         String sqlQuery = "SELECT id, u_name, email, phone_number, group_id, role, password, salt " +
                 "FROM usr WHERE group_id = ?";
 
-        List<Usr> users = new ArrayList<>();
+        List<User> users = new ArrayList<>();
 
         try (final Connection connection = DBConfiguration.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
@@ -28,7 +28,7 @@ public class UsrDao {
             ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
-                Usr usr = new Usr(rs.getLong(1),
+                User user = new User(rs.getLong(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getString(4),
@@ -37,7 +37,7 @@ public class UsrDao {
                         rs.getString(7),
                         rs.getString(8));
 
-            users.add(usr);
+            users.add(user);
             }
             return users;
         } catch (SQLException e) {
@@ -47,7 +47,7 @@ public class UsrDao {
     }
 
 
-    public Optional<Usr> findByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
 
         String sqlFindByEmailQuery =
                 "SELECT id, u_name, email, phone_number, group_id, role, password, salt From usr WHERE email = ?";
@@ -60,7 +60,7 @@ public class UsrDao {
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
-             Usr user = new Usr(rs.getLong(1),
+             User user = new User(rs.getLong(1),
                      rs.getString(2),
                      rs.getString(3),
                      rs.getString(4),
@@ -77,7 +77,7 @@ public class UsrDao {
     }
 
 
-    public void save(Usr user) {
+    public void save(User user) {
 
         String sqlSaveQuery = "INSERT INTO usr (u_name, email, phone_number, group_id, role, password, salt) " +
                 "VALUES (?,?,?,?,?,?,?)";
@@ -128,7 +128,8 @@ public class UsrDao {
         return false;
     }
 
-    public Optional<Usr> findById(Long id) {
+
+    public Optional<User> findById(Long id) {
 
         String sqlFindByIdQuery =
                 "SELECT id, u_name, email, phone_number, group_id, role, password, salt From usr WHERE id = ?";
@@ -141,7 +142,7 @@ public class UsrDao {
             ResultSet rs = preparedStatement.executeQuery();
 
             if (rs.next()) {
-                Usr user = new Usr(rs.getLong(1),
+                User user = new User(rs.getLong(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getString(4),
@@ -157,7 +158,7 @@ public class UsrDao {
         return Optional.empty();
     }
 
-    public void updateUserByNewUserAndUserId(Usr user) {
+    public void updateUserByNewUserAndUserId(User user) {
 
         String sqlUpdateQuery = "UPDATE usr SET u_name = ?, email = ?, phone_number = ?," +
                 " group_id = ?, role = ?, password = ?, salt = ? WHERE id = ?";

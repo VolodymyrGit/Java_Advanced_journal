@@ -1,9 +1,9 @@
 package volm.journal.servlets;
 
 import volm.journal.enums.Role;
-import volm.journal.model.Usr;
-import volm.journal.service.UsrService;
-import volm.journal.service.impl.UsrServiceImpl;
+import volm.journal.model.User;
+import volm.journal.service.UserService;
+import volm.journal.service.impl.UserServiceImpl;
 import volm.journal.util.SecurityUtil;
 
 import javax.servlet.ServletException;
@@ -18,7 +18,7 @@ import java.io.IOException;
 @WebServlet("/changeinfo")
 public class ChangeInfoDataServlet extends HttpServlet {
 
-    private final UsrService usrService = new UsrServiceImpl();
+    private final UserService userService = new UserServiceImpl();
 
 
     @Override
@@ -41,23 +41,23 @@ public class ChangeInfoDataServlet extends HttpServlet {
         String salt = SecurityUtil.generateRandomSalt();
         String newHashedPassword = SecurityUtil.getSecurePassword(npassword, salt);
 
-        Usr currentUsr = (Usr) req.getSession().getAttribute("currentUsr");
+        User currentUser = (User) req.getSession().getAttribute("currentUser");
 
-        Usr changedUser = new Usr(id, name, email, phone, groupId, role, newHashedPassword, salt);
+        User changedUser = new User(id, name, email, phone, groupId, role, newHashedPassword, salt);
 
-        String hashedPassword = SecurityUtil.getSecurePassword(password, currentUsr.getSalt());
+        String hashedPassword = SecurityUtil.getSecurePassword(password, currentUser.getSalt());
 
-        if (!currentUsr.getPassword().equals(hashedPassword)) {
+        if (!currentUser.getPassword().equals(hashedPassword)) {
             String errorMessage = "You entered wrong current password";
             req.setAttribute("errorMessage", errorMessage);
             req.getRequestDispatcher("changeInfo.jsp").forward(req, resp);
         }
 
-        usrService.updateUser(changedUser);
+        userService.updateUser(changedUser);
 
         HttpSession session = req.getSession();
-        session.removeAttribute("currentUsr");
-        session.setAttribute("currentUsr", changedUser);
+        session.removeAttribute("currentUser");
+        session.setAttribute("currentUser", changedUser);
 
         resp.sendRedirect("/cabinet");
     }

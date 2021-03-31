@@ -1,6 +1,6 @@
 package volm.journal.filter;
 
-import volm.journal.model.Usr;
+import volm.journal.model.User;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -26,9 +26,9 @@ public class LoginFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) req;
-        Usr currentUsr = (Usr) httpRequest.getSession().getAttribute("currentUsr");
+        User currentUser = (User) httpRequest.getSession().getAttribute("currentUser");
 
-        if(currentUsr != null) {
+        if(currentUser != null) {
 
             req.setAttribute("message", "You are already registered");
             req.getRequestDispatcher("index.jsp").forward(req, resp);

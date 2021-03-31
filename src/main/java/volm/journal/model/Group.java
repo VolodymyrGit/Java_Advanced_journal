@@ -1,8 +1,13 @@
 package volm.journal.model;
 
 
-public class Sgroup {
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
+@Entity
+public class Group {
+
+    @Id
     private Long id;
 
     private Long teacher_id;
@@ -10,7 +15,10 @@ public class Sgroup {
     private String info;
 
 
-    public Sgroup(Long id, Long teacherId, String info) {
+    public Group() {
+    }
+
+    public Group(Long id, Long teacherId, String info) {
         this.id = id;
         this.teacher_id = teacherId;
         this.info = info;

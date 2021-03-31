@@ -1,9 +1,9 @@
 package volm.journal.filter;
 
 
-import volm.journal.dao.HomeWorkDao1;
+import volm.journal.dao.HomeWorkDao;
 import volm.journal.model.HomeWork;
-import volm.journal.model.Usr;
+import volm.journal.model.User;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -20,7 +20,7 @@ import java.util.Objects;
 @WebFilter("/hw")
 public class HomeworkFilter implements Filter{
 
-    private HomeWorkDao1 homeWorkDao = new HomeWorkDao1();
+    private HomeWorkDao homeWorkDao = new HomeWorkDao();
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -31,12 +31,12 @@ public class HomeworkFilter implements Filter{
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-        Usr currentUsr = (Usr) httpRequest.getSession().getAttribute("currentUsr");
+        User currentUser = (User) httpRequest.getSession().getAttribute("currentUser");
 
         String hwId = httpRequest.getParameter("hwId");
         HomeWork homeWork = homeWorkDao.findById(Long.parseLong(hwId));
 
-        if (Objects.nonNull(currentUsr) && currentUsr.getId() != homeWork.getStudent_id()) {
+        if (Objects.nonNull(currentUser) && currentUser.getId() != homeWork.getStudent_id()) {
 
             httpRequest.setAttribute("message", "It is not your homework");
             httpRequest.getRequestDispatcher("index.jsp").forward(servletRequest, servletResponse);

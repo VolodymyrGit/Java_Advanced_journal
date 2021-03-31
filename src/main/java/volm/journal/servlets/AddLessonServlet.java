@@ -1,14 +1,14 @@
 package volm.journal.servlets;
 
 
-import volm.journal.dao.HomeWorkDao1;
-import volm.journal.dao.LessonDao1;
+import volm.journal.dao.HomeWorkDao;
+import volm.journal.dao.LessonDao;
 import volm.journal.enums.Role;
 import volm.journal.model.HomeWork;
 import volm.journal.model.Lesson;
-import volm.journal.model.Usr;
-import volm.journal.service.UsrService;
-import volm.journal.service.impl.UsrServiceImpl;
+import volm.journal.model.User;
+import volm.journal.service.UserService;
+import volm.journal.service.impl.UserServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,9 +23,9 @@ import java.util.List;
 @WebServlet("/add_lesson")
 public class AddLessonServlet extends HttpServlet {
 
-    private LessonDao1 lessonDao1 = new LessonDao1();
-    private UsrService usrService = new UsrServiceImpl();
-    private HomeWorkDao1 homeWorkDao1 = new HomeWorkDao1();
+    private LessonDao lessonDao = new LessonDao();
+    private UserService userService = new UserServiceImpl();
+    private HomeWorkDao homeWorkDao = new HomeWorkDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,13 +35,13 @@ public class AddLessonServlet extends HttpServlet {
 
         Lesson lesson = new Lesson(group_id, new Date());
 
-        Lesson savedLesson = lessonDao1.save(lesson);
+        Lesson savedLesson = lessonDao.save(lesson);
 
-        List<Usr> students = usrService.findUsersByRole(lesson.getGroup_id(), Role.STUDENT);
+        List<User> students = userService.findUsersByRole(lesson.getGroup_id(), Role.STUDENT);
 
         students.stream()
                 .map(s -> new HomeWork(savedLesson.getId(), s.getId()))
-                .forEach(hw -> homeWorkDao1.save(hw));
+                .forEach(hw -> homeWorkDao.save(hw));
 
         resp.sendRedirect("/table");
     }

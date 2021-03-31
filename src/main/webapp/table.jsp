@@ -29,7 +29,7 @@
                 <td>${l.id}<br>${l.create_date}</td>
             </c:forEach>
 
-            <c:if test="${sessionScope.currentUsr.role.name().equals('TEACHER')}">
+            <c:if test="${sessionScope.currentUser.role.name().equals('TEACHER')}">
                 <td>
                     <a href="/add_lesson?group_id=${group_id}">Add<br>Lesson</a>
                 </td>
@@ -49,7 +49,7 @@
 
                                 <c:if test="${!hw.done}"> style="background-color: yellow" </c:if>
                             >
-                                <c:if test="${sessionScope.currentUsr.id == st.id}">
+                                <c:if test="${sessionScope.currentUser.id == st.id}">
                                     <a href="/hw?hwId=${hw.id}">
                                 </c:if>
                                     ${hw.hw_description}</a>
@@ -58,7 +58,7 @@
 
                         <c:if test="${hw.hw_description.isEmpty()}">
                             <td>
-                                <c:if test="${sessionScope.currentUsr.id == st.id}">
+                                <c:if test="${sessionScope.currentUser.id == st.id}">
                                     <a href="/hw?hwId=${hw.id}">add</a>
                                 </c:if>
                             </td>

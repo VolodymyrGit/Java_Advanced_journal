@@ -1,9 +1,9 @@
 package volm.journal.servlets;
 
 import volm.journal.enums.Role;
-import volm.journal.model.Usr;
-import volm.journal.service.UsrService;
-import volm.journal.service.impl.UsrServiceImpl;
+import volm.journal.model.User;
+import volm.journal.service.UserService;
+import volm.journal.service.impl.UserServiceImpl;
 import volm.journal.util.SecurityUtil;
 
 import javax.servlet.ServletException;
@@ -18,7 +18,7 @@ import java.io.IOException;
 @WebServlet("/registration")
 public class RegistrationServlet extends HttpServlet {
 
-    private final UsrService usrService = new UsrServiceImpl();
+    private final UserService userService = new UserServiceImpl();
 
 
     @Override
@@ -42,12 +42,12 @@ public class RegistrationServlet extends HttpServlet {
         String salt = SecurityUtil.generateRandomSalt();
         String hashedPassword = SecurityUtil.getSecurePassword(password, salt);
 
-        Usr user = new Usr(name, email, phone, groupId, role, hashedPassword, salt);
+        User user = new User(name, email, phone, groupId, role, hashedPassword, salt);
 
-        Usr savedUsr = usrService.save(user);
+        User savedUser = userService.save(user);
 
         HttpSession session = req.getSession();
-        session.setAttribute("currentUsr", savedUsr);
+        session.setAttribute("currentUser", savedUser);
 
         resp.sendRedirect("/cabinet");
     }

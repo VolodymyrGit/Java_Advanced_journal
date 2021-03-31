@@ -1,8 +1,7 @@
 package volm.journal.servlets;
 
-import volm.journal.dao.HomeWorkDao1;
+import volm.journal.dao.HomeWorkDao;
 import volm.journal.model.HomeWork;
-import volm.journal.model.Usr;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,7 +14,7 @@ import java.io.IOException;
 @WebServlet("/hw")
 public class HomeWorkServlet extends HttpServlet {
 
-    private HomeWorkDao1 homeWorkDao1 = new HomeWorkDao1();
+    private HomeWorkDao homeWorkDao = new HomeWorkDao();
 
 
     @Override
@@ -24,10 +23,7 @@ public class HomeWorkServlet extends HttpServlet {
         String hwId = req.getParameter("hwId");
         req.setAttribute("hwId", hwId);
 
-//        Usr currentUsr = (Usr) req.getSession().getAttribute("currentUsr");
-//        long usrId = currentUsr.getId();
-
-        HomeWork hwById = homeWorkDao1.findById(Long.parseLong(hwId));
+        HomeWork hwById = homeWorkDao.findById(Long.parseLong(hwId));
         req.setAttribute("description", hwById.getHw_description());
         req.getRequestDispatcher("hwForm.jsp").forward(req, resp);
     }
@@ -39,9 +35,9 @@ public class HomeWorkServlet extends HttpServlet {
         String description = req.getParameter("description");
         Long hwId = Long.parseLong(req.getParameter("hwId"));
 
-        HomeWork homeWork = homeWorkDao1.findById(hwId);
+        HomeWork homeWork = homeWorkDao.findById(hwId);
         homeWork.setHw_description(description);
-        homeWorkDao1.updateHomeWorkDescription(homeWork);
+        homeWorkDao.updateHomeWorkDescription(homeWork);
 
         resp.sendRedirect("/table");
     }

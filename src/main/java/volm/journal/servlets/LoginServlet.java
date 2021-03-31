@@ -1,7 +1,7 @@
 package volm.journal.servlets;
 
-import volm.journal.service.UsrService;
-import volm.journal.service.impl.UsrServiceImpl;
+import volm.journal.service.UserService;
+import volm.journal.service.impl.UserServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
-    private final UsrService usrService = new UsrServiceImpl();
+    private final UserService userService = new UserServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -27,10 +27,10 @@ public class LoginServlet extends HttpServlet {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
 
-        if (usrService.authorized(login, password)) {
+        if (userService.authorized(login, password)) {
 
             HttpSession session = req.getSession();
-            session.setAttribute("currentUsr", usrService.findUsrByEmail(login));
+            session.setAttribute("currentUser", userService.findUserByEmail(login));
 
             resp.sendRedirect("/cabinet");
         } else {

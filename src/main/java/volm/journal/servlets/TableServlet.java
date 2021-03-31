@@ -1,13 +1,13 @@
 package volm.journal.servlets;
 
-import volm.journal.dao.HomeWorkDao1;
-import volm.journal.dao.LessonDao1;
+import volm.journal.dao.HomeWorkDao;
+import volm.journal.dao.LessonDao;
 import volm.journal.enums.Role;
 import volm.journal.model.HomeWork;
 import volm.journal.model.Lesson;
-import volm.journal.model.Usr;
-import volm.journal.service.UsrService;
-import volm.journal.service.impl.UsrServiceImpl;
+import volm.journal.model.User;
+import volm.journal.service.UserService;
+import volm.journal.service.impl.UserServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,31 +22,31 @@ import java.util.stream.Collectors;
 @WebServlet("/table")
 public class TableServlet extends HttpServlet {
 
-    private UsrService userService = new UsrServiceImpl();
-    private HomeWorkDao1 homeWorkDao1 = new HomeWorkDao1();
-    private LessonDao1 lessonDao1 = new LessonDao1();
+    private UserService userService = new UserServiceImpl();
+    private HomeWorkDao homeWorkDao = new HomeWorkDao();
+    private LessonDao lessonDao = new LessonDao();
 
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Usr currentUsr = (Usr) req.getSession().getAttribute("currentUsr");
-        Long group_id = currentUsr.getGroup_id();
+        User currentUser = (User) req.getSession().getAttribute("currentUser");
+        Long group_id = currentUser.getGroup_id();
 
-        List<Usr> users = userService.findByGroupId(group_id);
+        List<User> users = userService.findByGroupId(group_id);
 
-        List<Usr> teachers = userService.findUsersByRole(group_id, Role.TEACHER);
+        List<User> teachers = userService.findUsersByRole(group_id, Role.TEACHER);
 
-        List<Usr> students = userService.findUsersByRole(group_id, Role.STUDENT);
+        List<User> students = userService.findUsersByRole(group_id, Role.STUDENT);
 
-        List<Lesson> lessons = lessonDao1.findByGroupId(group_id);
+        List<Lesson> lessons = lessonDao.findByGroupId(group_id);
 
         List<Long> lessonsIds = lessons.stream()
                 .map(l -> l.getId())
                 .collect(Collectors.toList());
 
         Map<Long, List<HomeWork>> homeworks = lessonsIds.stream()
-                .map(id -> homeWorkDao1.findByLessonsIds(id))
+                .map(id -> homeWorkDao.findByLessonsIds(id))
                 .flatMap(List::stream)
                 .collect(Collectors.groupingBy(hw -> hw.getStudent_id(), Collectors.toList()));
 
