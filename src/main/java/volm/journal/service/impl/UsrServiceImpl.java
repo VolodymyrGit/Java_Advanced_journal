@@ -4,9 +4,11 @@ import volm.journal.dao.UsrDao;
 import volm.journal.enums.Role;
 import volm.journal.model.Usr;
 import volm.journal.service.UsrService;
+import volm.journal.util.SecurityUtil;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -45,6 +47,26 @@ public class UsrServiceImpl implements UsrService {
 
     @Override
     public boolean authorized(String email, String password) {
-        return usrDao.checkExist(email, password);
+        Optional<Usr> userFromDB = usrDao.findByEmail(email);
+
+        if(userFromDB.isPresent()) {
+            Usr user = userFromDB.get();
+            String securePassword = SecurityUtil.getSecurePassword(password, user.getSalt());
+            if(user.getPassword().equals(securePassword)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public Usr findUserById(Long id) {
+        return usrDao.findById(id)
+                .orElseThrow(NoSuchElementException::new);
+    }
+
+    @Override
+    public void updateUser(Usr user) {
+        usrDao.updateUserByNewUserAndUserId(user);
     }
 }

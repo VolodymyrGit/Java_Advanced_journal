@@ -3,6 +3,7 @@ package volm.journal.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Random;
 
 public class SecurityUtil {
 
@@ -26,5 +27,16 @@ public class SecurityUtil {
             e.printStackTrace();
         }
         return result;
+    }
+
+
+    public static String generateRandomSalt() {
+        String source = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz1234567890";
+        int size = 4;
+        char[] salt = new char[size];
+        for (int i = 0; i < size; i++) {
+            salt[i] = source.charAt(new Random().nextInt(source.length()));
+        }
+        return new String(salt);
     }
 }

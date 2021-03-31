@@ -16,7 +16,7 @@ public class UsrDao {
 
 
     public List<Usr> findByGroupId(Long group_id) {
-        String sqlQuery = "SELECT id, u_name, email, phone_number, group_id, role, password " +
+        String sqlQuery = "SELECT id, u_name, email, phone_number, group_id, role, password, salt " +
                 "FROM usr WHERE group_id = ?";
 
         List<Usr> users = new ArrayList<>();
@@ -34,7 +34,8 @@ public class UsrDao {
                         rs.getString(4),
                         rs.getLong(5),
                         Role.valueOf(rs.getString(6)),
-                        rs.getString(7));
+                        rs.getString(7),
+                        rs.getString(8));
 
             users.add(usr);
             }
@@ -49,7 +50,7 @@ public class UsrDao {
     public Optional<Usr> findByEmail(String email) {
 
         String sqlFindByEmailQuery =
-                "SELECT id, u_name, email, phone_number, group_id, role, password From usr WHERE email = ?";
+                "SELECT id, u_name, email, phone_number, group_id, role, password, salt From usr WHERE email = ?";
 
         try (Connection connection = DBConfiguration.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(sqlFindByEmailQuery);
@@ -65,7 +66,8 @@ public class UsrDao {
                      rs.getString(4),
                      rs.getLong(5),
                      Role.valueOf(rs.getString(6)),
-                     rs.getString(7));
+                     rs.getString(7),
+                     rs.getString(8));
                 return Optional.of(user);
             }
         } catch (SQLException e) {
@@ -77,8 +79,8 @@ public class UsrDao {
 
     public void save(Usr user) {
 
-        String sqlSaveQuery = "INSERT INTO usr (u_name, email, phone_number, group_id, role, password) " +
-                "VALUES (?,?,?,?,?,?)";
+        String sqlSaveQuery = "INSERT INTO usr (u_name, email, phone_number, group_id, role, password, salt) " +
+                "VALUES (?,?,?,?,?,?,?)";
 
         try (Connection connection = DBConfiguration.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(sqlSaveQuery);
@@ -89,6 +91,7 @@ public class UsrDao {
             preparedStatement.setLong(4, user.getGroup_id());
             preparedStatement.setString(5, user.getRole().toString());
             preparedStatement.setString(6, user.getPassword());
+            preparedStatement.setString(7,user.getSalt());
 
             preparedStatement.executeUpdate();
 
@@ -96,6 +99,7 @@ public class UsrDao {
             e.printStackTrace();
         }
     }
+
 
     public boolean checkExist(String email, String password) {
 
@@ -122,5 +126,58 @@ public class UsrDao {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public Optional<Usr> findById(Long id) {
+
+        String sqlFindByIdQuery =
+                "SELECT id, u_name, email, phone_number, group_id, role, password, salt From usr WHERE id = ?";
+
+        try (Connection connection = DBConfiguration.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlFindByIdQuery);
+
+            preparedStatement.setLong(1, id);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                Usr user = new Usr(rs.getLong(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getLong(5),
+                        Role.valueOf(rs.getString(6)),
+                        rs.getString(7),
+                        rs.getString(8));
+                return Optional.of(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    public void updateUserByNewUserAndUserId(Usr user) {
+
+        String sqlUpdateQuery = "UPDATE usr SET u_name = ?, email = ?, phone_number = ?," +
+                " group_id = ?, role = ?, password = ?, salt = ? WHERE id = ?";
+
+        try (Connection connection = DBConfiguration.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlUpdateQuery);
+
+            preparedStatement.setString(1, user.getU_name());
+            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(3, user.getPhone_number());
+            preparedStatement.setLong(4, user.getGroup_id());
+            preparedStatement.setString(5, user.getRole().toString());
+            preparedStatement.setString(6, user.getPassword());
+            preparedStatement.setString(7,user.getSalt());
+            preparedStatement.setLong(8, user.getId());
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

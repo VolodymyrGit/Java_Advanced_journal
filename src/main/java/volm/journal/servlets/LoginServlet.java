@@ -26,6 +26,7 @@ public class LoginServlet extends HttpServlet {
 
         String login = req.getParameter("login");
         String password = req.getParameter("password");
+
         if (usrService.authorized(login, password)) {
 
             HttpSession session = req.getSession();

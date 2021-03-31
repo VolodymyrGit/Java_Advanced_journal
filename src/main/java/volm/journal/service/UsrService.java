@@ -15,4 +15,8 @@ public interface UsrService {
     Usr findUsrByEmail(String email);
 
     boolean authorized(String email, String password);
+
+    Usr findUserById(Long id);
+
+    void updateUser(Usr user);
 }

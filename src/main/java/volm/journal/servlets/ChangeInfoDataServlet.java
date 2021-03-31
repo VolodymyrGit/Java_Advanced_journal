@@ -15,39 +15,49 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 
-@WebServlet("/registration")
-public class RegistrationServlet extends HttpServlet {
+@WebServlet("/changeinfo")
+public class ChangeInfoDataServlet extends HttpServlet {
 
     private final UsrService usrService = new UsrServiceImpl();
 
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        req.getRequestDispatcher("registration.jsp").forward(req, resp);
+        req.getRequestDispatcher("changeInfo.jsp").forward(req, resp);
     }
-
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        Long id = Long.parseLong(req.getParameter("id"));
         String name = req.getParameter("name");
         String email = req.getParameter("email");
         String phone = req.getParameter("phone");
         Long groupId = Long.parseLong(req.getParameter("groupId"));
         Role role = Role.valueOf(req.getParameter("role"));
         String password = req.getParameter("password");
-
+        String npassword = req.getParameter("npassword");
 
         String salt = SecurityUtil.generateRandomSalt();
-        String hashedPassword = SecurityUtil.getSecurePassword(password, salt);
+        String newHashedPassword = SecurityUtil.getSecurePassword(npassword, salt);
 
-        Usr user = new Usr(name, email, phone, groupId, role, hashedPassword, salt);
+        Usr currentUsr = (Usr) req.getSession().getAttribute("currentUsr");
 
-        Usr savedUsr = usrService.save(user);
+        Usr changedUser = new Usr(id, name, email, phone, groupId, role, newHashedPassword, salt);
+
+        String hashedPassword = SecurityUtil.getSecurePassword(password, currentUsr.getSalt());
+
+        if (!currentUsr.getPassword().equals(hashedPassword)) {
+            String errorMessage = "You entered wrong current password";
+            req.setAttribute("errorMessage", errorMessage);
+            req.getRequestDispatcher("changeInfo.jsp").forward(req, resp);
+        }
+
+        usrService.updateUser(changedUser);
 
         HttpSession session = req.getSession();
-        session.setAttribute("currentUsr", savedUsr);
+        session.removeAttribute("currentUsr");
+        session.setAttribute("currentUsr", changedUser);
 
         resp.sendRedirect("/cabinet");
     }
