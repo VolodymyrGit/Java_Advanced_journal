@@ -1,7 +1,8 @@
 package volm.journal.service.impl;
 
-import volm.journal.dao.UserDao;
+import volm.journal.dao.impl.UserDaoImpl;
 import volm.journal.enums.Role;
+import volm.journal.model.Group;
 import volm.journal.model.User;
 import volm.journal.service.UserService;
 import volm.journal.util.SecurityUtil;
@@ -14,12 +15,12 @@ import java.util.stream.Collectors;
 
 public class UserServiceImpl implements UserService {
 
-    private final UserDao userDao = new UserDao();
+    private final UserDaoImpl userDaoImpl = new UserDaoImpl();
 
 
     @Override
-    public List<User> findByGroupId(long group_id) {
-        return userDao.findByGroupId(group_id);
+    public List<User> findByGroup(Group group) {
+        return userDaoImpl.findByGroup(group);
     }
 
 
@@ -33,21 +34,21 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User save(User user) {
-        userDao.save(user);
+    public Optional<User> save(User user) {
+        userDaoImpl.save(user);
         return findUserByEmail(user.getEmail());
     }
 
 
     @Override
     public User findUserByEmail(String email) {
-        return userDao.findByEmail(email)
+        return userDaoImpl.findByEmail(email)
                 .orElseThrow(NoSuchElementException::new);
     }
 
     @Override
     public boolean authorized(String email, String password) {
-        Optional<User> userFromDB = userDao.findByEmail(email);
+        Optional<User> userFromDB = userDaoImpl.findByEmail(email);
 
         if(userFromDB.isPresent()) {
             User user = userFromDB.get();
@@ -61,12 +62,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserById(Long id) {
-        return userDao.findById(id)
+        return userDaoImpl.findById(id)
                 .orElseThrow(NoSuchElementException::new);
     }
 
     @Override
     public void updateUser(User user) {
-        userDao.updateUserByNewUserAndUserId(user);
+        userDaoImpl.updateUserByNewUserAndUserId(user);
     }
 }

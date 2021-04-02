@@ -25,19 +25,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = u_name)
+    @Column(name = "u_name")
     private String userName;
 
-    @Column(name = email, unique = true)
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = phone_number)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = password)
+    @Column(name = "password")
     private String password;
 
-    @Column(name = salt, length = 4)
+    @Column(name = "salt", length = 4)
     private String salt;
 
     @ManyToOne
@@ -50,7 +50,8 @@ public class User {
     public User() {
     }
 
-    public User(long id, String userName, String email, String phoneNumber, String password, String salt, Group group, Role role) {
+    public User(long id, String userName, String email, String phoneNumber,
+                String password, String salt, Group group, Role role) {
         this.id = id;
         this.userName = userName;
         this.email = email;
@@ -61,7 +62,8 @@ public class User {
         this.role = role;
     }
 
-    public User(String userName, String email, String phoneNumber, String password, String salt, Group group, Role role) {
+    public User(String userName, String email, String phoneNumber, String password,
+                String salt, Group group, Role role) {
         this.userName = userName;
         this.email = email;
         this.phoneNumber = phoneNumber;

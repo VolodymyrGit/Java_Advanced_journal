@@ -1,25 +1,43 @@
 package volm.journal.model;
 
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.util.Date;
 
+
+@Entity
+@Table(name = "lesson")
 public class Lesson {
 
+    @Id
+    @GeneratedValue
     private long id;
 
-    private Long group_id;
+    @Column(name = "sgroup")
+    @ManyToOne
+    private Group group;
 
-    private Date create_date;
+    @Column(name = "lesson_date")
+    private Date lessonDate;
 
-    public Lesson(long id, Long group_id, Date create_date) {
-        this.id = id;
-        this.group_id = group_id;
-        this.create_date = create_date;
+
+    public Lesson() {
     }
 
-    public Lesson(Long group_id, Date create_date) {
-        this.group_id = group_id;
-        this.create_date = create_date;
+    public Lesson(long id, Group group, Date lessonDate) {
+        this.id = id;
+        this.group = group;
+        this.lessonDate = lessonDate;
+    }
+
+    public Lesson(Group group, Date lessonDate) {
+        this.group = group;
+        this.lessonDate = lessonDate;
     }
 
     public long getId() {
@@ -30,19 +48,19 @@ public class Lesson {
         this.id = id;
     }
 
-    public Long getGroup_id() {
-        return group_id;
+    public Group getGroup() {
+        return group;
     }
 
-    public void setGroup_id(Long group_id) {
-        this.group_id = group_id;
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
-    public Date getCreate_date() {
-        return create_date;
+    public Date getLessonDate() {
+        return lessonDate;
     }
 
-    public void setCreate_date(Date create_date) {
-        this.create_date = create_date;
+    public void setLessonDate(Date lessonDate) {
+        this.lessonDate = lessonDate;
     }
 }

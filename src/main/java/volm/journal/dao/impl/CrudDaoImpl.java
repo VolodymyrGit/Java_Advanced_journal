@@ -1,59 +1,101 @@
 package volm.journal.dao.impl;
 
-import volm.journal.config.DBConfiguration;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import volm.journal.config.HibernateSessionFactory;
 import volm.journal.dao.CrudDao;
-import volm.journal.util.SqlQueryUtil;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 
-public class CrudDaoImpl<T, ID> implements CrudDao<T, ID> {
+public class CrudDaoImpl<T, ID extends Serializable> implements CrudDao<T, ID> {
 
-    private final Connection connection;
     private Class currentClass;
 
-    public CrudDaoImpl(Class currentClass) throws SQLException {
-        this.connection = DBConfiguration.getConnection();
+    public CrudDaoImpl(Class currentClass) {
         this.currentClass = currentClass;
-    }
-
-    @Override
-    public void save(T model) {
-        String saveQuery = SqlQueryUtil.getSaveQuery(model);
-
-        try(Statement statement = connection.createStatement()) {
-            statement.execute(saveQuery);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    @Override
-    public Optional<T> findById(ID id) {
-
-        return Optional.empty();
     }
 
 
     @Override
     public List<T> findAll() {
 
-        return null;
+        try (Session session = HibernateSessionFactory.getSessionFactory().openSession()) {
+
+            List<T> models = session.createQuery("FROM " + currentClass.getClass().getCanonicalName())
+                    .list();
+
+            return models;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
     }
+
+
+    @Override
+    public Optional<T> findById(ID id) {
+
+        try (Session session = HibernateSessionFactory.getSessionFactory().openSession()) {
+
+            T model = (T) session.get(currentClass, id);
+
+            return Optional.ofNullable(model);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+
+    @Override
+    public Optional<T> save(T model) {
+
+        try (Session session = HibernateSessionFactory.getSessionFactory().openSession()) {
+
+            Transaction transaction = session.beginTransaction();
+            ID id = (ID) session.save(model);
+            transaction.commit();
+
+            return Optional.ofNullable((T) session.get(model.getClass(), id));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+
 
     @Override
     public void delete(T model) {
 
+        try (Session session = HibernateSessionFactory.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            session.delete(model);
+
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public T update(T model) {
-        return null;
+    public void update(T model) {
+        try (Session session = HibernateSessionFactory.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            session.update(model);
+
+            transaction.commit();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

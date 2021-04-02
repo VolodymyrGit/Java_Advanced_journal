@@ -1,10 +1,11 @@
 package volm.journal.servlets;
 
 
-import volm.journal.dao.HomeWorkDao;
-import volm.journal.dao.LessonDao;
+import volm.journal.dao.impl.HomeWorkDaoImpl;
+import volm.journal.dao.impl.LessonDaoImpl;
 import volm.journal.enums.Role;
-import volm.journal.model.HomeWork;
+import volm.journal.model.Group;
+import volm.journal.model.Homework;
 import volm.journal.model.Lesson;
 import volm.journal.model.User;
 import volm.journal.service.UserService;
@@ -20,28 +21,27 @@ import java.util.Date;
 import java.util.List;
 
 
-@WebServlet("/add_lesson")
+@WebServlet("/add-lesson")
 public class AddLessonServlet extends HttpServlet {
 
-    private LessonDao lessonDao = new LessonDao();
+    private LessonDaoImpl lessonDaoImpl = new LessonDaoImpl();
     private UserService userService = new UserServiceImpl();
-    private HomeWorkDao homeWorkDao = new HomeWorkDao();
+    private HomeWorkDaoImpl homeWorkDaoImpl = new HomeWorkDaoImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Long group_id = Long.parseLong(req.getParameter("group_id"));
-        req.setAttribute("group_id", group_id);
+        User currentUser = (User) req.getSession().getAttribute("currentUser");
+        Group group = currentUser.getGroup();
+//        req.setAttribute("groupId", groupId);
 
-        Lesson lesson = new Lesson(group_id, new Date());
+        Lesson savedLesson = lessonDaoImpl.save(new Lesson(group, new Date()));
 
-        Lesson savedLesson = lessonDao.save(lesson);
-
-        List<User> students = userService.findUsersByRole(lesson.getGroup_id(), Role.STUDENT);
+        List<User> students = userService.findUsersByRole(group.getId(), Role.STUDENT);
 
         students.stream()
-                .map(s -> new HomeWork(savedLesson.getId(), s.getId()))
-                .forEach(hw -> homeWorkDao.save(hw));
+                .map(s -> new Homework(savedLesson, s))
+                .forEach(hw -> homeWorkDaoImpl.save(hw));
 
         resp.sendRedirect("/table");
     }

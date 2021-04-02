@@ -1,8 +1,8 @@
 package volm.journal.filter;
 
 
-import volm.journal.dao.HomeWorkDao;
-import volm.journal.model.HomeWork;
+import volm.journal.dao.impl.HomeWorkDaoImpl;
+import volm.journal.model.Homework;
 import volm.journal.model.User;
 
 import javax.servlet.Filter;
@@ -20,7 +20,7 @@ import java.util.Objects;
 @WebFilter("/hw")
 public class HomeworkFilter implements Filter{
 
-    private HomeWorkDao homeWorkDao = new HomeWorkDao();
+    private HomeWorkDaoImpl homeWorkDaoImpl = new HomeWorkDaoImpl();
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -34,7 +34,7 @@ public class HomeworkFilter implements Filter{
         User currentUser = (User) httpRequest.getSession().getAttribute("currentUser");
 
         String hwId = httpRequest.getParameter("hwId");
-        HomeWork homeWork = homeWorkDao.findById(Long.parseLong(hwId));
+        Homework homeWork = homeWorkDaoImpl.findById(Long.parseLong(hwId));
 
         if (Objects.nonNull(currentUser) && currentUser.getId() != homeWork.getStudent_id()) {
 
