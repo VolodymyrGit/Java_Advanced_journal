@@ -5,7 +5,7 @@ import volm.journal.model.Lesson;
 
 import java.util.List;
 
-public interface HomeWorkDao {
+public interface HomeworkDao extends CrudDao<Homework, Long>{
 
     List<Homework> findByLesson(Lesson lesson);
 }

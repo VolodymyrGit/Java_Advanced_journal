@@ -1,9 +1,12 @@
 package volm.journal.servlets;
 
+import volm.journal.dao.GroupDao;
+import volm.journal.dao.UserDao;
+import volm.journal.dao.impl.GroupDaoImpl;
+import volm.journal.dao.impl.UserDaoImpl;
 import volm.journal.enums.Role;
+import volm.journal.model.Group;
 import volm.journal.model.User;
-import volm.journal.service.UserService;
-import volm.journal.service.impl.UserServiceImpl;
 import volm.journal.util.SecurityUtil;
 
 import javax.servlet.ServletException;
@@ -13,12 +16,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @WebServlet("/registration")
 public class RegistrationServlet extends HttpServlet {
 
-    private final UserService userService = new UserServiceImpl();
+    private final GroupDao groupDao = new GroupDaoImpl();
+    private final UserDao userDao = new UserDaoImpl();
 
 
     @Override
@@ -39,12 +45,16 @@ public class RegistrationServlet extends HttpServlet {
         String password = req.getParameter("password");
 
 
+        Group group = groupDao.findById(groupId)
+                .orElseThrow(() -> new NoSuchElementException());
+
         String salt = SecurityUtil.generateRandomSalt();
         String hashedPassword = SecurityUtil.getSecurePassword(password, salt);
 
-        User user = new User(name, email, phone, groupId, role, hashedPassword, salt);
+        User user = new User(name, email, phone, hashedPassword, salt, group, role);
 
-        User savedUser = userService.save(user);
+        User savedUser = userDao.save(user)
+                .orElseThrow(() -> new NoSuchElementException());
 
         HttpSession session = req.getSession();
         session.setAttribute("currentUser", savedUser);

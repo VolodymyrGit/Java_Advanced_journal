@@ -1,7 +1,8 @@
 package volm.journal.servlets;
 
+import volm.journal.dao.HomeworkDao;
 import volm.journal.dao.LessonDao;
-import volm.journal.dao.impl.HomeWorkDaoImpl;
+import volm.journal.dao.impl.HomeworkDaoImpl;
 import volm.journal.dao.impl.LessonDaoImpl;
 import volm.journal.enums.Role;
 import volm.journal.model.Group;
@@ -21,11 +22,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
 @WebServlet("/table")
 public class TableServlet extends HttpServlet {
 
     private UserService userService = new UserServiceImpl();
-    private volm.journal.dao.HomeWorkDao homeWorkDao = new HomeWorkDaoImpl();
+    private HomeworkDao homeWorkDao = new HomeworkDaoImpl();
     private LessonDao lessonDao = new LessonDaoImpl();
 
 
@@ -35,9 +37,9 @@ public class TableServlet extends HttpServlet {
         User currentUser = (User) req.getSession().getAttribute("currentUser");
         Group group = currentUser.getGroup();
 
-        List<User> teachers = userService.findUsersByRole(group.getId(), Role.TEACHER);
+        List<User> teachers = userService.findUsersByRole(group, Role.TEACHER);
 
-        List<User> students = userService.findUsersByRole(group.getId(), Role.STUDENT);
+        List<User> students = userService.findUsersByRole(group, Role.STUDENT);
 
         List<Lesson> lessons = lessonDao.findLessonByGroup(group);
 

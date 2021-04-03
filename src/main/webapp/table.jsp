@@ -31,7 +31,7 @@
 
             <c:if test="${sessionScope.currentUser.role.name().equals('TEACHER')}">
                 <td>
-                    <a href="/add-lesson">Add<br>Lesson</a>
+                    <a href="/add-lesson">Add Lesson</a>
                 </td>
             </c:if>
         </tr>
@@ -39,11 +39,11 @@
         <tr>
             <c:forEach items="${students}" var="st">
                 <tr>
-                    <td>${st.u_name}</td>
+                    <td>${st.userName}</td>
 
                     <c:forEach items="${homeworks.get(st.id)}" var="hw">
 
-                        <c:if test="${!hw.hw_description.isEmpty()}">
+                        <c:if test="${!hw.hwDescription.isEmpty()}">
 
                             <td <c:if test="${hw.done}"> style="background-color: green" </c:if>
 
@@ -52,11 +52,11 @@
                                 <c:if test="${sessionScope.currentUser.id == st.id}">
                                     <a href="/hw?hwId=${hw.id}">
                                 </c:if>
-                                    ${hw.hw_description}</a>
+                                    ${hw.hwDescription}</a>
                             </td>
                         </c:if>
 
-                        <c:if test="${hw.hw_description.isEmpty()}">
+                        <c:if test="${hw.hwDescription.isEmpty()}">
                             <td>
                                 <c:if test="${sessionScope.currentUser.id == st.id}">
                                     <a href="/hw?hwId=${hw.id}">add</a>

@@ -10,5 +10,7 @@ public interface UserDao extends CrudDao<User, Long>{
 
     List<User> findByGroup(Group group);
 
+    List<User> FindByGroupId(Long groupId);
+
     Optional<User> findByEmail(String email);
 }

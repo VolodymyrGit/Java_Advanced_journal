@@ -15,8 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "usr")
 public class User {

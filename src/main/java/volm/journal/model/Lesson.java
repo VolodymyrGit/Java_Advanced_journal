@@ -18,7 +18,6 @@ public class Lesson {
     @GeneratedValue
     private long id;
 
-    @Column(name = "sgroup")
     @ManyToOne
     private Group group;
 

@@ -8,7 +8,6 @@ import volm.journal.service.UserService;
 import volm.journal.util.SecurityUtil;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,32 +18,14 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<User> findByGroup(Group group) {
-        return userDaoImpl.findByGroup(group);
-    }
-
-
-    @Override
-    public List<User> findUsersByRole(long group_id, Role role) {
-        List<User> users = findByGroupId(group_id);
+    public List<User> findUsersByRole(Group group, Role role) {
+        List<User> users = userDaoImpl.findByGroup(group);
         return users.stream()
                 .filter(u -> u.getRole().equals(role))
                 .collect(Collectors.toList());
     }
 
 
-    @Override
-    public Optional<User> save(User user) {
-        userDaoImpl.save(user);
-        return findUserByEmail(user.getEmail());
-    }
-
-
-    @Override
-    public User findUserByEmail(String email) {
-        return userDaoImpl.findByEmail(email)
-                .orElseThrow(NoSuchElementException::new);
-    }
 
     @Override
     public boolean authorized(String email, String password) {
@@ -58,16 +39,5 @@ public class UserServiceImpl implements UserService {
             }
         }
         return false;
-    }
-
-    @Override
-    public User findUserById(Long id) {
-        return userDaoImpl.findById(id)
-                .orElseThrow(NoSuchElementException::new);
-    }
-
-    @Override
-    public void updateUser(User user) {
-        userDaoImpl.updateUserByNewUserAndUserId(user);
     }
 }

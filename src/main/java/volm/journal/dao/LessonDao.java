@@ -5,7 +5,7 @@ import volm.journal.model.Lesson;
 
 import java.util.List;
 
-public interface LessonDao {
+public interface LessonDao extends CrudDao<Lesson, Long>{
 
-    List<Lesson> findLessonByGroup(Group group);
+    List<Lesson> findLessonByGroup (Group group);
 }

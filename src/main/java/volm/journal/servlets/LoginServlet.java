@@ -1,5 +1,7 @@
 package volm.journal.servlets;
 
+import volm.journal.dao.UserDao;
+import volm.journal.dao.impl.UserDaoImpl;
 import volm.journal.service.UserService;
 import volm.journal.service.impl.UserServiceImpl;
 
@@ -14,29 +16,33 @@ import java.io.IOException;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+
     private final UserService userService = new UserServiceImpl();
+    private final UserDao userDao = new UserDaoImpl();
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("login.jsp").forward(req, resp);
     }
 
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String login = req.getParameter("login");
+        String email = req.getParameter("login");
         String password = req.getParameter("password");
 
-        if (userService.authorized(login, password)) {
+        if (userService.authorized(email, password)) {
 
             HttpSession session = req.getSession();
-            session.setAttribute("currentUser", userService.findUserByEmail(login));
+            session.setAttribute("currentUser", userDao.findByEmail(email));
 
             resp.sendRedirect("/cabinet");
         } else {
             String errorMessage = "Wrong login or password";
             req.setAttribute("errorMessage", errorMessage);
-            req.setAttribute("previousLogin", login);
+            req.setAttribute("previousLogin", email);
             req.getRequestDispatcher("login.jsp").forward(req, resp);
         }
     }

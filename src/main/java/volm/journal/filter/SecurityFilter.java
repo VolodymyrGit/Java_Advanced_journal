@@ -13,7 +13,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@WebFilter(value = {"/table","/cabinet", "/changeinfo"})
+@WebFilter(value = {"/table","/cabinet", "/change-info"})
 public class SecurityFilter implements Filter {
 
     @Override

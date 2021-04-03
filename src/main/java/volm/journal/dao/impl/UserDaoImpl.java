@@ -2,6 +2,7 @@ package volm.journal.dao.impl;
 
 import org.hibernate.Session;
 import volm.journal.config.HibernateSessionFactory;
+import volm.journal.dao.GroupDao;
 import volm.journal.dao.UserDao;
 import volm.journal.model.Group;
 import volm.journal.model.User;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 public class UserDaoImpl extends CrudDaoImpl<User, Long> implements UserDao {
 
+    private final GroupDao groupDao = new GroupDaoImpl();
 
     public UserDaoImpl() {
         super(User.class);
@@ -31,6 +33,16 @@ public class UserDaoImpl extends CrudDaoImpl<User, Long> implements UserDao {
             return users;
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<User> FindByGroupId(Long groupId) {
+
+        try (Session session = HibernateSessionFactory.getSessionFactory().openSession()) {
+
+            Optional<Group> byId = groupDao.findById(groupId);
         }
         return Collections.emptyList();
     }

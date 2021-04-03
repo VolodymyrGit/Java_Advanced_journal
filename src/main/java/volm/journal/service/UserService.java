@@ -9,17 +9,7 @@ import java.util.Optional;
 
 public interface UserService {
 
-    List<User> findByGroup(Group group);
-
-    List<User> findUsersByRole(long group_id, Role role);
-
-    Optional<User> save(User user);
-
-    User findUserByEmail(String email);
+    List<User> findUsersByRole(Group group, Role role);
 
     boolean authorized(String email, String password);
-
-    User findUserById(Long id);
-
-    void updateUser(User user);
 }

@@ -1,7 +1,7 @@
 package volm.journal.filter;
 
 
-import volm.journal.dao.impl.HomeWorkDaoImpl;
+import volm.journal.dao.impl.HomeworkDaoImpl;
 import volm.journal.model.Homework;
 import volm.journal.model.User;
 
@@ -14,13 +14,14 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 
 @WebFilter("/hw")
 public class HomeworkFilter implements Filter{
 
-    private HomeWorkDaoImpl homeWorkDaoImpl = new HomeWorkDaoImpl();
+    private HomeworkDaoImpl homeworkDaoImpl = new HomeworkDaoImpl();
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -34,9 +35,10 @@ public class HomeworkFilter implements Filter{
         User currentUser = (User) httpRequest.getSession().getAttribute("currentUser");
 
         String hwId = httpRequest.getParameter("hwId");
-        Homework homeWork = homeWorkDaoImpl.findById(Long.parseLong(hwId));
+        Homework homework = homeworkDaoImpl.findById(Long.parseLong(hwId))
+                .orElseThrow(() -> new NoSuchElementException());
 
-        if (Objects.nonNull(currentUser) && currentUser.getId() != homeWork.getStudent_id()) {
+        if (Objects.nonNull(currentUser) && currentUser.getId() != homework.getStudent().getId()) {
 
             httpRequest.setAttribute("message", "It is not your homework");
             httpRequest.getRequestDispatcher("index.jsp").forward(servletRequest, servletResponse);

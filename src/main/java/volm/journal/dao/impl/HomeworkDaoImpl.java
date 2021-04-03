@@ -2,7 +2,7 @@ package volm.journal.dao.impl;
 
 import org.hibernate.Session;
 import volm.journal.config.HibernateSessionFactory;
-import volm.journal.dao.HomeWorkDao;
+import volm.journal.dao.HomeworkDao;
 import volm.journal.model.Homework;
 import volm.journal.model.Lesson;
 
@@ -11,10 +11,10 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class HomeWorkDaoImpl extends CrudDaoImpl<Homework, Long> implements HomeWorkDao {
+public class HomeworkDaoImpl extends CrudDaoImpl<Homework, Long> implements HomeworkDao {
 
 
-    public HomeWorkDaoImpl() {
+    public HomeworkDaoImpl() {
         super(Homework.class);
     }
 

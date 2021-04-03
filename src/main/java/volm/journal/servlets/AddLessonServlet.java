@@ -1,7 +1,7 @@
 package volm.journal.servlets;
 
 
-import volm.journal.dao.impl.HomeWorkDaoImpl;
+import volm.journal.dao.impl.HomeworkDaoImpl;
 import volm.journal.dao.impl.LessonDaoImpl;
 import volm.journal.enums.Role;
 import volm.journal.model.Group;
@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @WebServlet("/add-lesson")
@@ -26,22 +27,22 @@ public class AddLessonServlet extends HttpServlet {
 
     private LessonDaoImpl lessonDaoImpl = new LessonDaoImpl();
     private UserService userService = new UserServiceImpl();
-    private HomeWorkDaoImpl homeWorkDaoImpl = new HomeWorkDaoImpl();
+    private HomeworkDaoImpl homeworkDaoImpl = new HomeworkDaoImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         User currentUser = (User) req.getSession().getAttribute("currentUser");
         Group group = currentUser.getGroup();
-//        req.setAttribute("groupId", groupId);
 
-        Lesson savedLesson = lessonDaoImpl.save(new Lesson(group, new Date()));
+        Lesson savedLesson = lessonDaoImpl.save(new Lesson(group, new Date()))
+                .orElseThrow(() -> new NoSuchElementException());
 
-        List<User> students = userService.findUsersByRole(group.getId(), Role.STUDENT);
+        List<User> students = userService.findUsersByRole(group, Role.STUDENT);
 
         students.stream()
                 .map(s -> new Homework(savedLesson, s))
-                .forEach(hw -> homeWorkDaoImpl.save(hw));
+                .forEach(hw -> homeworkDaoImpl.save(hw));
 
         resp.sendRedirect("/table");
     }

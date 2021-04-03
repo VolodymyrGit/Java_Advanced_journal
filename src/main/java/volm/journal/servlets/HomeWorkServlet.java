@@ -1,6 +1,7 @@
 package volm.journal.servlets;
 
-import volm.journal.dao.impl.HomeWorkDaoImpl;
+import volm.journal.dao.HomeworkDao;
+import volm.journal.dao.impl.HomeworkDaoImpl;
 import volm.journal.model.Homework;
 
 import javax.servlet.ServletException;
@@ -9,12 +10,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 
 @WebServlet("/hw")
 public class HomeWorkServlet extends HttpServlet {
 
-    private HomeWorkDaoImpl homeWorkDaoImpl = new HomeWorkDaoImpl();
+    private HomeworkDao homeworkDao = new HomeworkDaoImpl();
 
 
     @Override
@@ -23,8 +25,11 @@ public class HomeWorkServlet extends HttpServlet {
         String hwId = req.getParameter("hwId");
         req.setAttribute("hwId", hwId);
 
-        Homework hwById = homeWorkDaoImpl.findById(Long.parseLong(hwId));
-        req.setAttribute("description", hwById.getHw_description());
+        Homework hwById = homeworkDao.findById(Long.parseLong(hwId))
+                .orElseThrow(() -> new NoSuchElementException());
+
+        req.setAttribute("description", hwById.getHwDescription());
+
         req.getRequestDispatcher("hwForm.jsp").forward(req, resp);
     }
 
@@ -35,9 +40,10 @@ public class HomeWorkServlet extends HttpServlet {
         String description = req.getParameter("description");
         Long hwId = Long.parseLong(req.getParameter("hwId"));
 
-        Homework homeWork = homeWorkDaoImpl.findById(hwId);
-        homeWork.setHw_description(description);
-        homeWorkDaoImpl.updateHomeworkDescription(homeWork);
+        Homework homeWork = homeworkDao.findById(hwId)
+                .orElseThrow(() -> new NoSuchElementException());
+        homeWork.setHwDescription(description);
+        homeworkDao.update(homeWork);
 
         resp.sendRedirect("/table");
     }
