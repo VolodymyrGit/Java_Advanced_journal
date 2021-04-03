@@ -12,6 +12,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Optional;
 
 @WebFilter(value = {"/table","/cabinet", "/change-info"})
 public class SecurityFilter implements Filter {
@@ -24,6 +25,7 @@ public class SecurityFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) req;
+
         User currentUser = (User) httpRequest.getSession().getAttribute("currentUser");
 
         if(currentUser == null) {

@@ -2,6 +2,7 @@ package volm.journal.servlets;
 
 import volm.journal.dao.UserDao;
 import volm.journal.dao.impl.UserDaoImpl;
+import volm.journal.model.User;
 import volm.journal.service.UserService;
 import volm.journal.service.impl.UserServiceImpl;
 
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Optional;
 
 
 @WebServlet("/login")
@@ -35,8 +37,10 @@ public class LoginServlet extends HttpServlet {
 
         if (userService.authorized(email, password)) {
 
+            Optional<User> optUser = userDao.findByEmail(email);
+
             HttpSession session = req.getSession();
-            session.setAttribute("currentUser", userDao.findByEmail(email));
+            session.setAttribute("currentUser", optUser.get());
 
             resp.sendRedirect("/cabinet");
         } else {

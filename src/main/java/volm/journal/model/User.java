@@ -1,7 +1,5 @@
 package volm.journal.model;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import volm.journal.enums.Role;
 
 import javax.persistence.Column;

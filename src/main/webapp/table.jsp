@@ -17,7 +17,7 @@
 </head>
 <body>
     <c:forEach items="${teachers}" var="t">
-        <h1>${t.u_name} - ${t.email}</h1>
+        <h1>${t.getUserName()} - ${t.getEmail()}</h1>
     </c:forEach>
 
     <table class="table table-bordered border-primary">
@@ -26,7 +26,7 @@
             <td> Students </td>
 
             <c:forEach items="${lessons}" var="l">
-                <td>${l.id}<br>${l.create_date}</td>
+                <td>${l.getId()}<br>${l.getLessonDate()}</td>
             </c:forEach>
 
             <c:if test="${sessionScope.currentUser.role.name().equals('TEACHER')}">
@@ -39,27 +39,27 @@
         <tr>
             <c:forEach items="${students}" var="st">
                 <tr>
-                    <td>${st.userName}</td>
+                    <td>${st.getUserName()}</td>
 
-                    <c:forEach items="${homeworks.get(st.id)}" var="hw">
+                    <c:forEach items="${homeworks.get(st.getId())}" var="hw">
 
-                        <c:if test="${!hw.hwDescription.isEmpty()}">
+                        <c:if test="${!hw.getHwDescription().isEmpty()}">
 
-                            <td <c:if test="${hw.done}"> style="background-color: green" </c:if>
+                            <td <c:if test="${hw.isDone()}"> style="background-color: green" </c:if>
 
-                                <c:if test="${!hw.done}"> style="background-color: yellow" </c:if>
+                                <c:if test="${!hw.isDone()}"> style="background-color: yellow" </c:if>
                             >
-                                <c:if test="${sessionScope.currentUser.id == st.id}">
-                                    <a href="/hw?hwId=${hw.id}">
+                                <c:if test="${sessionScope.currentUser.id == st.getId()}">
+                                    <a href="/hw?hwId=${hw.getId()}">
                                 </c:if>
-                                    ${hw.hwDescription}</a>
+                                    ${hw.getHwDescription()}</a>
                             </td>
                         </c:if>
 
-                        <c:if test="${hw.hwDescription.isEmpty()}">
+                        <c:if test="${hw.getHwDescription().isEmpty()}">
                             <td>
-                                <c:if test="${sessionScope.currentUser.id == st.id}">
-                                    <a href="/hw?hwId=${hw.id}">add</a>
+                                <c:if test="${sessionScope.currentUser.id == st.getId()}">
+                                    <a href="/hw?hwId=${hw.getId()}">add</a>
                                 </c:if>
                             </td>
                         </c:if>

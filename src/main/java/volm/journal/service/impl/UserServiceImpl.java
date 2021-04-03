@@ -32,8 +32,10 @@ public class UserServiceImpl implements UserService {
         Optional<User> userFromDB = userDaoImpl.findByEmail(email);
 
         if(userFromDB.isPresent()) {
+
             User user = userFromDB.get();
             String securePassword = SecurityUtil.getSecurePassword(password, user.getSalt());
+
             if(user.getPassword().equals(securePassword)) {
                 return true;
             }
