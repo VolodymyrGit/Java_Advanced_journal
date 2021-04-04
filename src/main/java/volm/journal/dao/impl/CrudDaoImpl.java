@@ -25,7 +25,7 @@ public class CrudDaoImpl<T, ID extends Serializable> implements CrudDao<T, ID> {
 
         try (Session session = HibernateSessionFactory.getSessionFactory().openSession()) {
 
-            List<T> models = session.createQuery("FROM " + currentClass.getClass().getCanonicalName())
+            List<T> models = session.createQuery("FROM " + currentClass.getCanonicalName())
                     .list();
 
             return models;
