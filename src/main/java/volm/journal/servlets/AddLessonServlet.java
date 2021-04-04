@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 
-@WebServlet("/add_lesson")
+@WebServlet("/add-lesson")
 public class AddLessonServlet extends HttpServlet {
 
     private LessonDao1 lessonDao1 = new LessonDao1();

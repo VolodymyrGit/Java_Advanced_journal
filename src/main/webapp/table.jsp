@@ -31,7 +31,7 @@
 
             <c:if test="${sessionScope.currentUsr.role.name().equals('TEACHER')}">
                 <td>
-                    <a href="/add_lesson?group_id=${group_id}">Add<br>Lesson</a>
+                    <a href="/add-lesson?group_id=${group_id}">Add Lesson</a>
                 </td>
             </c:if>
         </tr>
