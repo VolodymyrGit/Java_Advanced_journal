@@ -14,10 +14,7 @@ public class DBConfiguration {
         try {
             Class.forName("org.postgresql.Driver");
             return DriverManager.getConnection(URL, LOGIN, PASS);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        } catch (ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;
         }

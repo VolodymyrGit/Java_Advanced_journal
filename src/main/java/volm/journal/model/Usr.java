@@ -17,13 +17,30 @@ public class Usr {
 
     private Role role;
 
-    public Usr(long id, String name, String email, String phoneNumber, Long groupId, Role role) {
+    private String password;
+
+    private String salt;
+
+
+    public Usr(long id, String u_name, String email, String phone_number, Long group_id, Role role, String password, String salt) {
         this.id = id;
-        this.u_name = name;
+        this.u_name = u_name;
         this.email = email;
-        this.phone_number = phoneNumber;
-        this.group_id = groupId;
+        this.phone_number = phone_number;
+        this.group_id = group_id;
         this.role = role;
+        this.password = password;
+        this.salt = salt;
+    }
+
+    public Usr(String u_name, String email, String phone_number, Long group_id, Role role, String password, String salt) {
+        this.u_name = u_name;
+        this.email = email;
+        this.phone_number = phone_number;
+        this.group_id = group_id;
+        this.role = role;
+        this.password = password;
+        this.salt = salt;
     }
 
     public long getId() {
@@ -72,5 +89,21 @@ public class Usr {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 }

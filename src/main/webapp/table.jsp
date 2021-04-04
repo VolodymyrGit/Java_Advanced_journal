@@ -9,10 +9,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Student Table</title></head>
+    <title>Journal Table</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
           rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
           crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/table.css">
+</head>
 <body>
     <c:forEach items="${teachers}" var="t">
         <h1>${t.u_name} - ${t.email}</h1>
@@ -21,13 +23,17 @@
     <table class="table table-bordered border-primary">
 
         <tr>
-            <td> # </td>
+            <td> Students </td>
 
             <c:forEach items="${lessons}" var="l">
                 <td>${l.id}<br>${l.create_date}</td>
             </c:forEach>
 
-            <td><a href="/add_lesson?group_id=${group_id}">Add<br>Lesson</a></td>
+            <c:if test="${sessionScope.currentUsr.role.name().equals('TEACHER')}">
+                <td>
+                    <a href="/add-lesson?group_id=${group_id}">Add Lesson</a>
+                </td>
+            </c:if>
         </tr>
 
         <tr>
@@ -43,12 +49,19 @@
 
                                 <c:if test="${!hw.done}"> style="background-color: yellow" </c:if>
                             >
-                                <a href="/hw?hwId=${hw.id}">${hw.hw_description}</a>
+                                <c:if test="${sessionScope.currentUsr.id == st.id}">
+                                    <a href="/hw?hwId=${hw.id}">
+                                </c:if>
+                                    ${hw.hw_description}</a>
                             </td>
                         </c:if>
 
                         <c:if test="${hw.hw_description.isEmpty()}">
-                            <td><a href="/hw?hwId=${hw.id}">add</a></td>
+                            <td>
+                                <c:if test="${sessionScope.currentUsr.id == st.id}">
+                                    <a href="/hw?hwId=${hw.id}">add</a>
+                                </c:if>
+                            </td>
                         </c:if>
 
                     </c:forEach>
@@ -56,6 +69,12 @@
             </c:forEach>
         </tr>
     </table>
+
+    <div>
+        <a href="/cabinet"><button type="button">Cabinet</button></a>
+
+        <a href="/logout"><button type="button">Logout</button></a>
+    </div>
 
 
 

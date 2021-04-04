@@ -30,9 +30,8 @@ public class TableServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Long group_id = Long.parseLong(req.getParameter("group_id"));
-
-        List<Usr> users = userService.findByGroupId(group_id);
+        Usr currentUsr = (Usr) req.getSession().getAttribute("currentUsr");
+        Long group_id = currentUsr.getGroup_id();
 
         List<Usr> teachers = userService.findUsersByRole(group_id, Role.TEACHER);
 
@@ -40,11 +39,9 @@ public class TableServlet extends HttpServlet {
 
         List<Lesson> lessons = lessonDao1.findByGroupId(group_id);
 
-        List<Long> lessonsIds = lessons.stream()
+        Map<Long, List<HomeWork>> homeworks = lessons.stream()
                 .map(l -> l.getId())
-                .collect(Collectors.toList());
-
-        Map<Long, List<HomeWork>> homeworks = lessonsIds.stream()
+                .collect(Collectors.toList()).stream()
                 .map(id -> homeWorkDao1.findByLessonsIds(id))
                 .flatMap(List::stream)
                 .collect(Collectors.groupingBy(hw -> hw.getStudent_id(), Collectors.toList()));

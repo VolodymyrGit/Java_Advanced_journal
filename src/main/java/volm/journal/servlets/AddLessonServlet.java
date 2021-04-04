@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 
-@WebServlet("/add_lesson")
+@WebServlet("/add-lesson")
 public class AddLessonServlet extends HttpServlet {
 
     private LessonDao1 lessonDao1 = new LessonDao1();
@@ -43,6 +43,6 @@ public class AddLessonServlet extends HttpServlet {
                 .map(s -> new HomeWork(savedLesson.getId(), s.getId()))
                 .forEach(hw -> homeWorkDao1.save(hw));
 
-        resp.sendRedirect("/table?group_id=1");
+        resp.sendRedirect("/table");
     }
 }

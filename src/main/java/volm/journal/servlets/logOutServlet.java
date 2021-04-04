@@ -1,4 +1,5 @@
-package volm.journal;
+package volm.journal.servlets;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -7,15 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-
-@WebServlet("/main")
-public class MainServlet extends HttpServlet {
-
+@WebServlet("/logout")
+public class logOutServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String name = req.getParameter("name");
 
-        req.getRequestDispatcher("main.jsp").forward(req, resp);
+        req.getSession().removeAttribute("currentUsr");
+        resp.sendRedirect("/login");
     }
 }
