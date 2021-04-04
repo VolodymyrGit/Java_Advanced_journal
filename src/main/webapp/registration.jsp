@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Laptop
@@ -16,7 +17,13 @@
         <label><input type="text" name="name" required> Name</label><br>
         <label><input type="text" name="email" required> Email</label><br>
         <label><input type="text" name="phone" required> Phone number</label><br>
-        <label><input type="text" name="groupId" required> Group id</label><br>
+
+        <label><select name="groupId" required>
+            <c:forEach items="${groups}" var="g">
+                <option value="${g.getId()}">${g.getId()}</option>
+            </c:forEach>
+        </select> Group id</label><br>
+
         <label><input type="password" name="password" required> Password</label><br>
         <label><select name="role" required>
             <option value="STUDENT">Student</option>

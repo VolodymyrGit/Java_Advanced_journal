@@ -8,4 +8,6 @@ import java.util.List;
 public interface HomeworkDao extends CrudDao<Homework, Long>{
 
     List<Homework> findByLesson(Lesson lesson);
+
+    List<Homework> findByLessonId(Long id);
 }

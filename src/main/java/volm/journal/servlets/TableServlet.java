@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class TableServlet extends HttpServlet {
 
     private UserService userService = new UserServiceImpl();
-    private HomeworkDao homeWorkDao = new HomeworkDaoImpl();
+    private HomeworkDao homeworkDao = new HomeworkDaoImpl();
     private LessonDao lessonDao = new LessonDaoImpl();
 
 
@@ -44,7 +44,9 @@ public class TableServlet extends HttpServlet {
         List<Lesson> lessons = lessonDao.findLessonByGroup(group);
 
         Map<Long, List<Homework>> homeworks = lessons.stream()
-                .map(l -> homeWorkDao.findByLesson(l))
+                .map(l -> l.getId())
+                .collect(Collectors.toList()).stream()
+                .map(id -> homeworkDao.findByLessonId(id))
                 .flatMap(List::stream)
                 .collect(Collectors.groupingBy(hw -> hw.getStudent().getId(), Collectors.toList()));
 
